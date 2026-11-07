@@ -90,7 +90,7 @@ jobs:
           fetch-depth: 0
       - name: Gitleaks
         run: |
-          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.28.0 \
+          docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/repo" zricethezav/gitleaks:v8.28.0 \
             git /repo --redact --verbose --exit-code 1
 
   system:
