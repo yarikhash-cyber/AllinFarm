@@ -1,0 +1,14 @@
+{
+  "name": "allinfarm-workspace",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "pnpm -r check",
+    "lint": "pnpm -r lint",
+    "build": "pnpm -r build"
+  }
+}

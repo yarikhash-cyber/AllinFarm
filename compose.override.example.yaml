@@ -1,0 +1,16 @@
+# Only for networks with a TLS-inspecting proxy (corporate networks).
+# Copy this file to compose.override.yaml (it is git-ignored) and put the proxy's
+# CA certificate in infra/certs/extra-ca.pem. Docker Compose picks the override up by itself.
+services:
+  api:
+    build:
+      secrets:
+        - extra_ca
+  web:
+    build:
+      secrets:
+        - extra_ca
+
+secrets:
+  extra_ca:
+    file: ./infra/certs/extra-ca.pem

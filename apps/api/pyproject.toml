@@ -1,0 +1,25 @@
+[project]
+name = "allinfarm-api"
+version = "0.1.0"
+description = "AllinFarm HTTP API"
+requires-python = ">=3.13"
+license = "AGPL-3.0-or-later"
+dependencies = [
+    "allinfarm-engine",
+    "allinfarm-units",
+    "alembic>=1.16",
+    "fastapi>=0.116",
+    "psycopg[binary]>=3.2",
+    "pydantic>=2.11",
+    "pydantic-settings>=2.10",
+    "sqlalchemy[asyncio]>=2.0.43",
+    "uvicorn[standard]>=0.35",
+]
+
+[tool.uv.sources]
+allinfarm-engine = { workspace = true }
+allinfarm-units = { workspace = true }
+
+[build-system]
+requires = ["uv_build>=0.8,<0.12"]
+build-backend = "uv_build"

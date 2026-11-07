@@ -1,0 +1,84 @@
+[project]
+name = "allinfarm-workspace"
+version = "0.0.0"
+description = "AllinFarm monorepo (workspace root, not a package)"
+requires-python = ">=3.13"
+license = "AGPL-3.0-or-later"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "allinfarm-api",
+    "allinfarm-engine",
+    "allinfarm-units",
+    "httpx>=0.28",
+    "import-linter>=2.3",
+    "mypy>=1.17",
+    "pip-licenses>=5.0",
+    "pytest>=8.4",
+    "pytest-asyncio>=1.1",
+    "ruff>=0.12",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["apps/api", "packages/engine", "packages/units"]
+
+[tool.uv.sources]
+allinfarm-api = { workspace = true }
+allinfarm-engine = { workspace = true }
+allinfarm-units = { workspace = true }
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["apps/web"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "S", "SIM", "RUF", "ASYNC", "PTH"]
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["allinfarm_api", "allinfarm_engine", "allinfarm_units"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["S101"]
+"scripts/**" = ["S603", "S607"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+packages = ["allinfarm_api", "allinfarm_engine", "allinfarm_units"]
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["apps/api/tests", "packages/engine/tests", "packages/units/tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+addopts = "--import-mode=importlib"
+markers = ["db: needs a PostgreSQL database with PostGIS (DATABASE_URL)"]
+
+[tool.importlinter]
+root_packages = ["allinfarm_api", "allinfarm_engine", "allinfarm_units"]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "units is the lowest layer: imports nothing from the project, no I/O frameworks"
+type = "forbidden"
+source_modules = ["allinfarm_units"]
+forbidden_modules = [
+    "allinfarm_api", "allinfarm_engine",
+    "sqlalchemy", "psycopg", "fastapi", "starlette", "httpx", "requests", "aiohttp", "urllib3",
+]
+
+[[tool.importlinter.contracts]]
+name = "engine is a pure library: no API, no database, no network, no web framework"
+type = "forbidden"
+source_modules = ["allinfarm_engine"]
+forbidden_modules = [
+    "allinfarm_api",
+    "sqlalchemy", "psycopg", "alembic", "fastapi", "starlette", "httpx", "requests", "aiohttp", "urllib3",
+]

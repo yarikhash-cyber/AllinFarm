@@ -1,0 +1,14 @@
+[project]
+name = "allinfarm-engine"
+version = "0.1.0"
+description = "AllinFarm calculation engine: a pure library without database or network"
+requires-python = ">=3.13"
+license = "AGPL-3.0-or-later"
+dependencies = ["allinfarm-units"]
+
+[tool.uv.sources]
+allinfarm-units = { workspace = true }
+
+[build-system]
+requires = ["uv_build>=0.8,<0.12"]
+build-backend = "uv_build"

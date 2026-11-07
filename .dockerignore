@@ -1,0 +1,12 @@
+**/node_modules
+**/.venv
+**/__pycache__
+**/.mypy_cache
+**/.ruff_cache
+**/.pytest_cache
+**/.import_linter_cache
+apps/web/.svelte-kit
+apps/web/build
+.git
+infra/certs
+compose.override.yaml
