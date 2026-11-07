@@ -1,0 +1,45 @@
+/* Temporary base styles. The design system (tokens, fonts, grid) comes in part 2 of the plan. */
+:root {
+	--chornozem: #191a19;
+	--sternia: #7d7f7b;
+	--soloma: #c9cac6;
+	--polova: #e2e3df;
+	--inii: #f2f2f0;
+	--irzha: #c2502a;
+
+	--bg: var(--inii);
+	--fg: var(--chornozem);
+	--muted: var(--sternia);
+	--rule: var(--soloma);
+
+	color-scheme: light dark;
+	font-family:
+		'Golos Text',
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		Roboto,
+		sans-serif;
+	font-size: 15px;
+	line-height: 24px;
+	font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: var(--chornozem);
+		--fg: var(--inii);
+		--muted: var(--soloma);
+		--rule: #3a3c3a;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--fg);
+}

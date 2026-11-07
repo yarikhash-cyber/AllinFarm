@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.import_linter_cache/
+
+# Node
+node_modules/
+apps/web/.svelte-kit/
+apps/web/build/
+
+# Local only
+compose.override.yaml
+infra/certs/
+.env
+.env.*
+!.env.example
+
+# OS, editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

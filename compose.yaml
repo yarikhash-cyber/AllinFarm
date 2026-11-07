@@ -1,0 +1,71 @@
+# AllinFarm: the whole system with one command.
+#   docker compose up --build
+# Site:  http://localhost:8080
+# Mail:  http://localhost:8025 (development mailbox, nothing leaves your computer)
+#
+# The same images run on a server later; only environment variables change (ADR 0004).
+name: allinfarm
+
+services:
+  db:
+    image: postgis/postgis:18-3.6
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: allinfarm
+      POSTGRES_PASSWORD: allinfarm
+      POSTGRES_DB: allinfarm
+    volumes:
+      - db-data:/var/lib/postgresql
+    ports:
+      - "127.0.0.1:54320:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U allinfarm -d allinfarm"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  mailpit:
+    image: axllent/mailpit:v1.33.0
+    restart: unless-stopped
+    environment:
+      MP_DISABLE_VERSION_CHECK: "true"
+    ports:
+      - "127.0.0.1:8025:8025"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://allinfarm:allinfarm@db:5432/allinfarm
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      # Containers talk to each other directly, even if Docker injects a proxy.
+      NO_PROXY: db,mailpit,api,web,localhost,127.0.0.1
+      no_proxy: db,mailpit,api,web,localhost,127.0.0.1
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ":8080"
+      NO_PROXY: db,mailpit,api,web,localhost,127.0.0.1
+      no_proxy: db,mailpit,api,web,localhost,127.0.0.1
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:8080"
+
+volumes:
+  db-data:
